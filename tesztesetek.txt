@@ -1,0 +1,76 @@
+BankAccount tesztek
+
+Új számla létrehozása -> 0 az egyenleg.
+  számla kezdőállapot
+
+1000 befizetése -> 1000 az egyenleg.
+  A befizetett összeg hozzáadódik
+
+1000 és 500,25 egymás utáni befizetése -> 1500,25 az egyenleg.e
+  Az új befizetésnek hozzá kell adódnia
+
+Meglévő 500-as egyenlegre -100 befizetése -> IllegalArgumentException
+  A hibás befizetés nem módosíthat
+
+Meglévő 500-as egyenlegre 0 befizetése -> IllegalArgumentException, az egyenleg    marad 500.
+  A szabály szerint a befizetésnek pozitívnak kell lennie
+
+Meglévő 500-as egyenlegre NaN befizetése -> IllegalArgumentException
+  A NaN nem használható
+
+- Meglévő 500-as egyenlegre pozitív végtelen befizetése -> IllegalArgumentException
+  A befizetésnek véges számnak kell lennie
+
+- Meglévő 500-as egyenlegre negatív végtelen befizetése -> IllegalArgumentException
+  Ez is érvénytelen
+
+Pénzfelvétel
+
+- 1000 befizetése, majd 400 felvétele -> 600 az egyenleg.
+  A felvett összeg levonódik az egyenlegből
+
+- 1000 befizetése, majd 1000 felvétele -> 0 az egyenleg.
+  A teljes egyenleg felvehető
+
+- 1000-es egyenlegből 1001 felvétele -> IllegalArgumentException, az egyenleg marad 1000.
+  Több pénzt nem lehet felvenni, mint amennyi a számlán van
+
+- 1000-es egyenlegből -100 felvétele -> IllegalArgumentException, az egyenleg marad 1000.
+  A felvett összegnek pozitívnak kell lennie
+
+- 1000-es egyenlegből 0 felvétele -> IllegalArgumentException, az egyenleg marad 1000.
+  A 0 összegű pénzfelvétel sem megengedett
+
+- 1000-es egyenlegből NaN felvétele -> IllegalArgumentException, az egyenleg marad 1000
+  A NaN nem használható
+
+- 1000-es egyenlegből pozitív végtelen felvétele -> IllegalArgumentException, az egyenleg marad 1000.
+  A felvett összegnek véges számnak kell lennie.
+
+- 1000-es egyenlegből negatív végtelen felvétele -> IllegalArgumentException, az egyenleg marad 1000.
+  Ez is érvénytelen összeg.
+
+- Új, üres számláról 1 felvétele -> IllegalArgumentException, az egyenleg marad 0.
+  Üres számláról sem lehet pénzt felvenni.
+
+- 1000,50 befizetése, majd 250,25 felvétele -> 750,25 az egyenleg.
+  Törtrészes összegekkel is működnie kell a pénzfelvételnek
+
+BankService tesztek
+
+mock mellett 1000 befizetése -> 1000 az egyenleg, és egy értesítés
+
+@Mock és @InjectMocks 500-as egyenlegre 1000 befizetése -> 1500 az egyenleg
+
+Két sikeres befizetés, 1000 és 500 -> 1500 az egyenleg, és két értesítés
+
+-100 befizetése új számlára -> IllegalArgumentException, 0 az egyenleg
+
+ExchangeRateService tesztek
+
+100 EUR átváltása 400-as árfolyammal -> 40000 HU
+  A when(...).thenReturn(400.0) adja meg a választ
+
+50 USD átváltása 350-es USD/HUF árfolyammal -> 17500 HUF
+
+1000 HUF átváltása 0,0025-ös HUF/EUR árfolyammal -> 2,5 EUR
